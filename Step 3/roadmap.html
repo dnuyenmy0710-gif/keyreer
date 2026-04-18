@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roadmap | Lộ Trình Thực Hiện</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="/Step 3/style.css">
+    <style>
+        body {
+            overflow-y: auto;
+        }
+
+        .roadmap-view {
+            min-height: 100vh;
+            padding: 4rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .roadmap-header {
+            text-align: center;
+            margin-bottom: 5rem;
+        }
+
+        .roadmap-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .roadmap-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .roadmap-card {
+            background: #fff;
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid #eee;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.02);
+        }
+
+        .roadmap-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .roadmap-list {
+            list-style: none;
+        }
+
+        .roadmap-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .roadmap-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #000;
+        }
+
+        .badge-step {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background: #000;
+            color: #fff;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .roadmap-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="roadmap-view">
+        <div class="explorer-nav" style="margin-top: 0; margin-bottom: 4rem; justify-content: center;">
+            <div class="nav-tab" onclick="location.href='/Step 3/'">Mở lối sự nghiệp</div>
+            <div class="nav-tab" id="tab-detail">Chi tiết nghề nghiệp</div>
+            <div class="nav-tab active" id="tab-roadmap">Lộ trình thực hiện</div>
+        </div>
+
+        <div class="roadmap-header">
+            <h1 class="roadmap-title">Lộ trình học tập & phát triển</h1>
+            <p id="career-subtitle" style="color: #888; font-size: 1.2rem;">Chuyên sâu cho nghề nghiệp bạn đã chọn</p>
+        </div>
+
+        <div class="roadmap-grid">
+            <div class="roadmap-card">
+                <span class="badge-step">BƯỚC 1</span>
+                <h3>Học vấn & Chứng chỉ</h3>
+                <ul class="roadmap-list">
+                    <li>Hoàn thành bằng Đại học/Cao đẳng chuyên ngành liên quan</li>
+                    <li>Chứng chỉ Tiếng Anh (IELTS 6.5+ hoặc tương đương)</li>
+                    <li>Khóa học chuyên môn ngắn hạn tại các trung tâm uy tín</li>
+                    <li>Tự học qua các nền tảng Coursera, Udemy, LinkedIn Learning</li>
+                </ul>
+            </div>
+
+            <div class="roadmap-card">
+                <span class="badge-step">BƯỚC 2</span>
+                <h3>Kỹ năng chuyên môn</h3>
+                <ul class="roadmap-list">
+                    <li>Sử dụng thành thạo các công cụ đặc thù của ngành</li>
+                    <li>Phát triển tư duy logic và giải quyết vấn đề</li>
+                    <li>Kỹ năng quản lý thời gian và làm việc nhóm</li>
+                    <li>Xây dựng Portfolio/Dự án cá nhân ấn tượng</li>
+                </ul>
+            </div>
+
+            <div class="roadmap-card">
+                <span class="badge-step">BƯỚC 3</span>
+                <h3>Kinh nghiệm thực tế</h3>
+                <ul class="roadmap-list">
+                    <li>Thực tập tại các công ty/tập đoàn đa quốc gia</li>
+                    <li>Tham gia các cuộc thi chuyên môn quy mô lớn</li>
+                    <li>Xây dựng mạng lưới quan hệ (Networking) trong ngành</li>
+                    <li>Tìm kiếm người dẫn dắt (Mentor) giàu kinh nghiệm</li>
+                </ul>
+            </div>
+
+            <div class="roadmap-card">
+                <span class="badge-step">BƯỚC 4</span>
+                <h3>Phát triển sự nghiệp</h3>
+                <ul class="roadmap-list">
+                    <li>Nâng cao kỹ năng lãnh đạo và quản lý</li>
+                    <li>Cập nhật các xu hướng công nghệ mới nhất</li>
+                    <li>Chia sẻ kiến thức, đóng góp cho cộng đồng</li>
+                    <li>Định hướng trở thành Chuyên gia hoặc Quản lý cấp cao</li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const careerName = urlParams.get('career');
+        if (careerName) {
+            document.getElementById('career-subtitle').textContent = `Lộ trình phát triển chuyên sâu cho: ${careerName}`;
+            document.title = `Roadmap | ${careerName}`;
+
+            // Link tab detail
+            const tabDetail = document.getElementById('tab-detail');
+            tabDetail.onclick = () => location.href = `/Step 3/timeline.html?career=${encodeURIComponent(careerName)}`;
+        }
+    </script>
+</body>
+
+</html>
