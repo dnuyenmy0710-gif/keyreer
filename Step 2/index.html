@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trắc Nghiệm Định Hướng Nghề Nghiệp</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #111111;
+      --accent: #FF5A5F;
+      --bg: #F9FAFB;
+      --card-bg: #FFFFFF;
+      --border: #E5E7EB;
+      --text-main: #1F2937;
+      --text-muted: #6B7280;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      line-height: 1.5;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Layout */
+    .quiz-container {
+      max-width: 800px;
+      margin: 40px auto;
+      width: 92%;
+      flex-grow: 1;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+      position: relative;
+    }
+
+    /* Progress */
+    .progress-shell {
+      width: 100%;
+      height: 6px;
+      background: #F3F4F6;
+      border-radius: 100px;
+      margin-bottom: 40px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.4s ease;
+    }
+
+    /* Question Styles */
+    .question-header {
+      margin-bottom: 32px;
+    }
+
+    .question-number {
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .question-text {
+      font-family: 'Instrument Sans', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+      color: #111;
+    }
+
+    /* Choices */
+    .choices-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .choice-btn {
+      width: 100%;
+      padding: 20px 24px;
+      background: #fff;
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      text-align: left;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .choice-btn:hover {
+      border-color: #111;
+      background: #FAFAFA;
+      transform: translateY(-1px);
+    }
+
+    .choice-btn.selected {
+      background: #111;
+      border-color: #111;
+      color: #fff;
+    }
+
+    .choice-icon {
+      width: 24px;
+      height: 24px;
+      border: 2px solid currentColor;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+    }
+
+    /* Footer */
+    .quiz-footer {
+      margin-top: 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: var(--transition);
+      border: 1px solid transparent;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover:not(:disabled) {
+      border-color: #111;
+    }
+
+    .btn-outline:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+
+    /* Results */
+    #resultScreen {
+      display: none;
+    }
+
+    .result-header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .result-header h2 {
+      font-size: 2.5rem;
+      font-family: 'Instrument Sans', sans-serif;
+      margin-bottom: 16px;
+    }
+
+    .score-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .score-card {
+      padding: 20px;
+      border-radius: 20px;
+      background: #F9FAFB;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .score-val {
+      font-size: 1.5rem;
+      font-weight: 800;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .score-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .insight-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .insight-box {
+      padding: 24px;
+      border-radius: 20px;
+      background: #fff;
+      border: 1px solid var(--border);
+    }
+
+    .insight-box h4 {
+      font-size: 1rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .insight-box p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    .jobs-section {
+      margin-top: 40px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+
+    .jobs-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .job-chip {
+      padding: 8px 16px;
+      background: #F3F4F6;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .section-label {
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #111;
+    }
+
+    .result-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 48px;
+      justify-content: center;
+    }
+
+    .btn-solid {
+      background: #111;
+      color: #fff;
+      padding: 14px 32px;
+    }
+
+    .btn-solid:hover {
+      background: #333;
+      transform: translateY(-2px);
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: slideIn 0.4s ease forwards;
+    }
+
+    @media (max-width: 640px) {
+      .card {
+        padding: 24px;
+      }
+
+      .question-text {
+        font-size: 1.5rem;
+      }
+
+      .insight-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="quiz-container">
+    <div class="card" id="quizCard">
+      <!-- Top Nav -->
+      <div id="topBar"
+        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px;">
+        <div style="font-weight: 800; font-size: 1.25rem; letter-spacing: -0.03em;">KEYREER</div>
+        <div style="font-size: 0.875rem; font-weight: 600; color: var(--text-muted);" id="qCount">01/35</div>
+      </div>
+
+      <!-- Progress -->
+      <div class="progress-shell" id="progressShell">
+        <div class="progress-bar" id="progressBar"></div>
+      </div>
+
+      <!-- Question Area -->
+      <div id="questionArea">
+        <!-- Injected by JS -->
+      </div>
+
+      <!-- Result Screen -->
+      <div id="resultScreen">
+        <!-- Injected by JS -->
+      </div>
+
+      <!-- Footer Nav -->
+      <div class="quiz-footer" id="quizFooter">
+        <button class="btn btn-outline" id="prevBtn" onclick="prevQuestion()" disabled>Quay lại</button>
+        <div id="hdrBlock" style="text-align: center; color: var(--text-muted); font-size: 0.75rem; font-weight: 500;">
+          Chọn đáp án phù hợp nhất với bạn
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const questions = [
+      { id: 1, text: "Tôi thích lắp ráp, sửa chữa các vật dụng gia đình hoặc máy móc.", group: "R" },
+      { id: 2, text: "Tôi thích làm việc với các công cụ, thiết bị kỹ thuật.", group: "R" },
+      { id: 3, text: "Tôi thích các hoạt động ngoài trời, vận động tay chân.", group: "R" },
+      { id: 4, text: "Tôi thích tìm hiểu cách thức vận động của các loại máy móc.", group: "R" },
+      { id: 5, text: "Tôi là người thực tế, thích làm việc với đồ vật hơn là con người.", group: "R" },
+
+      { id: 6, text: "Tôi thích quan sát, học hỏi và giải quyết các vấn đề toán học, khoa học.", group: "I" },
+      { id: 7, text: "Tôi thích đọc các bài báo về khoa học, công nghệ mới.", group: "I" },
+      { id: 8, text: "Tôi thích phân tích dữ liệu và tìm ra quy luật đằng sau chúng.", group: "I" },
+      { id: 9, text: "Tôi thường đặt câu hỏi 'Tại sao' trước mọi hiện tượng.", group: "I" },
+      { id: 10, text: "Tôi thích làm việc độc lập để nghiên cứu một vấn đề.", group: "I" },
+
+      { id: 11, text: "Tôi thích vẽ, thiết kế hoặc chụp ảnh.", group: "A" },
+      { id: 12, text: "Tôi thích viết lách, sáng tạo nội dung hoặc kể chuyện.", group: "A" },
+      { id: 13, text: "Tôi thích nghe nhạc, chơi nhạc cụ hoặc tham gia các hoạt động nghệ thuật.", group: "A" },
+      { id: 14, text: "Tôi thích trang trí nhà cửa, phối đồ thời trang.", group: "A" },
+      { id: 15, text: "Tôi là người nhạy cảm, giàu trí tưởng tượng và yêu cái đẹp.", group: "A" },
+
+      { id: 16, text: "Tôi thích giúp đỡ mọi người xung quanh khi họ gặp khó khăn.", group: "S" },
+      { id: 17, text: "Tôi thích giảng dạy, truyền đạt kiến thức cho người khác.", group: "S" },
+      { id: 18, text: "Tôi thích làm việc trong các dự án cộng đồng, thiện nguyện.", group: "S" },
+      { id: 19, text: "Mọi người thường tìm đến tôi để tâm sự và xin lời khuyên.", group: "S" },
+      { id: 20, text: "Tôi thích làm việc trong môi trường tập thể, kết nối mọi người.", group: "S" },
+
+      { id: 21, text: "Tôi thích thuyết phục người khác đồng ý với ý kiến của mình.", group: "E" },
+      { id: 22, text: "Tôi thích dẫn dắt, tổ chức các hoạt động hoặc đội nhóm.", group: "E" },
+      { id: 23, text: "Tôi quan tâm đến kinh doanh, khởi nghiệp hoặc quản lý.", group: "E" },
+      { id: 24, text: "Tôi thích đặt ra các mục tiêu cao và tìm cách đạt được chúng.", group: "E" },
+      { id: 25, text: "Tôi là người tự tin, quyết đoán và có khả năng đàm phán.", group: "E" },
+
+      { id: 26, text: "Tôi thích làm việc với các con số, dữ liệu và hồ sơ.", group: "C" },
+      { id: 27, text: "Tôi thích sự ngăn nắp, kỷ luật và các quy tắc rõ ràng.", group: "C" },
+      { id: 28, text: "Tôi thích lập kế hoạch chi tiết cho công việc và cuộc sống.", group: "C" },
+      { id: 29, text: "Tôi thích kiểm tra các sai sót trong văn bản hoặc số liệu.", group: "C" },
+      { id: 30, text: "Tôi là người cẩn thận, tỉ mỉ và đáng tin cậy.", group: "C" },
+
+      { id: 31, text: "Tôi thích tự mình tạo ra những sản phẩm thủ công.", group: "R" },
+      { id: 32, text: "Tôi thích khám phá những vùng đất mới và nghiên cứu về chúng.", group: "I" },
+      { id: 33, text: "Tôi thường có những ý tưởng khác biệt so với số đông.", group: "A" },
+      { id: 34, text: "Tôi cảm thấy hạnh phúc khi thấy người khác tiến bộ nhờ mình.", group: "S" },
+      { id: 35, text: "Tôi thích môi trường làm việc năng động và đầy thử thách.", group: "E" }
+    ];
+
+    const groupMeta = {
+      R: { name: "Kỹ thuật (Realistic)", icon: "⚙️", color: "blue", desc: "Người của hành động, thực tế và khéo léo." },
+      I: { name: "Nghiên cứu (Investigative)", icon: "🔬", color: "purple", desc: "Người của tư duy, phân tích và logic." },
+      A: { name: "Nghệ thuật (Artistic)", icon: "🎨", color: "pink", desc: "Người của sáng tạo, cảm xúc và trực giác." },
+      S: { name: "Xã hội (Social)", icon: "🤝", color: "green", desc: "Người của kết nối, giúp đỡ và thấu hiểu." },
+      E: { name: "Quản lý (Enterprising)", icon: "🚀", color: "orange", desc: "Người của dẫn dắt, mục tiêu và tầm nhìn." },
+      C: { name: "Nghiệp vụ (Conventional)", icon: "📂", color: "gray", desc: "Người của quy trình, tổ chức và chi tiết." }
+    };
+
+    const careerMap = {
+      R: ["Kỹ sư cơ khí", "Kỹ thuật viên điện", "Kiến trúc sư", "Công nghệ ô tô", "Lập trình viên phần cứng"],
+      I: ["Nhà khoa học dữ liệu", "Phân tích tài chính", "Nhà nghiên cứu", "Lập trình viên AI", "Y bác sĩ"],
+      A: ["Thiết kế đồ họa", "Kiến trúc sư cảnh quan", "Content Creator", "Đạo diễn", "Copywriter"],
+      S: ["Quản trị nhân sự", "Chuyên gia tâm lý", "Giáo viên", "Quan hệ công chúng", "Chăm sóc khách hàng"],
+      E: ["Quản trị kinh doanh", "Marketing Manager", "Luật sư", "Chuyên viên bán hàng", "Startup Founder"],
+      C: ["Kế toán", "Kiểm toán", "Phân tích nghiệp vụ", "Quản lý vận hành", "Data Entry Specialist"]
+    };
+
+    let currentIndex = 0;
+    let answers = {};
+
+    function showQuestion() {
+      const q = questions[currentIndex];
+      const area = document.getElementById('questionArea');
+
+      // Update Top Nav
+      document.getElementById('qCount').textContent = `${(currentIndex + 1).toString().padStart(2, '0')}/${questions.length}`;
+
+      // Update Progress
+      const progress = ((currentIndex + 1) / questions.length) * 100;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+
+      // Render Question
+      area.innerHTML = `
+        <div class="animate-in">
+          <div class="question-header">
+            <span class="question-number">Câu hỏi ${q.id}</span>
+            <h3 class="question-text">${q.text}</h3>
+          </div>
+          <div class="choices-grid">
+            <button class="choice-btn ${answers[q.id] === 5 ? 'selected' : ''}" onclick="saveAnswer(${q.id}, 5)">
+              <span class="choice-icon">A</span> Rất đúng
+            </button>
+            <button class="choice-btn ${answers[q.id] === 4 ? 'selected' : ''}" onclick="saveAnswer(${q.id}, 4)">
+              <span class="choice-icon">B</span> Khá đúng
+            </button>
+            <button class="choice-btn ${answers[q.id] === 3 ? 'selected' : ''}" onclick="saveAnswer(${q.id}, 3)">
+              <span class="choice-icon">C</span> Phân vân
+            </button>
+            <button class="choice-btn ${answers[q.id] === 2 ? 'selected' : ''}" onclick="saveAnswer(${q.id}, 2)">
+              <span class="choice-icon">D</span> Ít đúng
+            </button>
+            <button class="choice-btn ${answers[q.id] === 1 ? 'selected' : ''}" onclick="saveAnswer(${q.id}, 1)">
+              <span class="choice-icon">E</span> Không đúng
+            </button>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('prevBtn').disabled = currentIndex === 0;
+    }
+
+    function saveAnswer(qId, val) {
+      answers[qId] = val;
+      showQuestion(); // re-render to show selection
+
+      // Auto-advance
+      setTimeout(() => {
+        if (currentIndex < questions.length - 1) {
+          currentIndex++;
+          showQuestion();
+        } else {
+          showResult();
+        }
+      }, 300);
+    }
+
+    function prevQuestion() {
+      if (currentIndex > 0) {
+        currentIndex--;
+        showQuestion();
+      }
+    }
+
+    function showResult() {
+      // Calculate scores
+      let groupScores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+      let groupCounts = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
+
+      questions.forEach(q => {
+        if (answers[q.id]) {
+          groupScores[q.group] += answers[q.id];
+          groupCounts[q.group]++;
+        }
+      });
+
+      // Normalize to 100% scale (Max score per question is 5)
+      const scores = {};
+      Object.keys(groupScores).forEach(g => {
+        scores[g] = Math.round((groupScores[g] / (groupCounts[g] * 5)) * 100);
+      });
+
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      const topGroup = sorted[0][0];
+      const topInfo = groupMeta[topGroup];
+
+      // Build data for Step 3
+      const finalResult = {
+        scores,
+        sorted,
+        topGroup,
+        groupDetails: groupMeta,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem('keyreer_result', JSON.stringify(finalResult));
+
+      // Build UI
+      const scoreRowsHtml = sorted.map(([g, val]) => `
+        <div class="score-card">
+          <span class="score-val">${val}%</span>
+          <span class="score-label">${groupMeta[g].name.split(' ')[0]}</span>
+        </div>
+      `).join('');
+
+      const insights = [
+        { t: "Thế mạnh", d: `Bạn có xu hướng phát triển mạnh mẽ trong các môi trường ${topInfo.name.toLowerCase()}.` },
+        { t: "Tính cách", d: topInfo.desc },
+        { t: "Môi trường", d: "Ưu tiên không gian làm việc có tính linh hoạt và đề cao kết quả thực tế." },
+        { t: "Cơ hội", d: "Phù hợp với các vị trí yêu cầu chuyên môn sâu hoặc khả năng quản lý đội nhóm." }
+      ];
+
+      const insightHtml = insights.map(i => `
+        <div class="insight-box">
+          <h4>${i.t}</h4>
+          <p>${i.d}</p>
+        </div>
+      `).join('');
+
+      const jobChips = careerMap[topGroup].map(j => `<span class="job-chip">${j}</span>`).join('');
+
+      const resultArea = document.getElementById('resultScreen');
+      resultArea.innerHTML = `
+        <div class="result-header">
+          <div style="font-size: 3.5rem; margin-bottom: 20px;">${topInfo.icon}</div>
+          <span class="section-label" style="color:var(--text-muted)">Kết quả của bạn là</span>
+          <h2>${topInfo.name}</h2>
+          <p style="color:var(--text-muted); max-width: 500px; margin: 0 auto;">
+            Dựa trên 35 câu trả lời, bạn thuộc nhóm người có thiên hướng <strong>${topInfo.name}</strong>. 
+            Đây là nhóm có những đặc điểm nổi bật phù hợp với thị trường hiện đại.
+          </p>
+        </div>
+
+        <!-- Score overview -->
+        <div class="section-label" style="margin-bottom:12px">Điểm số theo nhóm định hướng</div>
+        <div class="score-overview" style="margin-bottom:28px">${scoreRowsHtml}</div>
+
+        <!-- 4 Insight blocks -->
+        <div class="section-label" style="margin-bottom:14px">Phân tích chuyên sâu · ${topInfo.icon} ${topInfo.name}</div>
+        <div class="insight-grid">${insightHtml}</div>
+
+        <!-- Jobs -->
+        <div class="jobs-section">
+          <div class="section-label">Nghề nghiệp phù hợp</div>
+          <div class="jobs-grid">${jobChips}</div>
+        </div>
+
+        <!-- Actions -->
+        <div class="result-actions">
+          <button class="btn btn-ghost" onclick="window.location.href='/homepage-career-main/'">← Trang chủ</button>
+          <button class="btn btn-outline" onclick="restart()">Làm lại</button>
+          <button class="btn btn-solid" onclick="window.location.href='/Step 3/'">Khám phá nghề nghiệp →</button>
+        </div>
+      `;
+
+      // Transition to result
+      const card = document.querySelector('.card');
+      card.style.transition = 'opacity 0.3s ease';
+      card.style.opacity = '0';
+
+      setTimeout(() => {
+        document.getElementById('questionArea').style.display = 'none';
+        document.getElementById('quizFooter').style.display = 'none';
+        document.getElementById('hdrBlock').style.display = 'none';
+        document.getElementById('topBar').style.display = 'none';
+        document.getElementById('progressShell').style.display = 'none';
+        document.getElementById('resultScreen').style.display = 'block';
+
+        card.style.opacity = '1';
+
+        // Auto-scroll to top of result
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 300);
+    }
+
+    function restart() {
+      location.reload();
+    }
+
+    // Init
+    showQuestion();
+  </script>
+</body>
+
+</html>
